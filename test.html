@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="node_modules/qunitjs/qunit/qunit.css">
+    <script src="main.js"></script>
+    <script src="JavaScript-MD5-master/js/md5.min.js"></script>
+    <script src="node_modules/qunitjs/qunit/qunit.js"></script>
+    <script src="test.js"></script>
 </head>
 <body>
-
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
 </body>
 </html>
 
 <script>
-    function Person(username, email, password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-
-        console.log(username);
-    }
-
-    var piter = new Person('Piter', 'piter@mail.ru', '123');
+    var piter = new Person('Piter', 'piter@mail.ru', '123', '3');
+//    console.log(this.username);
 </script>
