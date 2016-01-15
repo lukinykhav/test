@@ -1,42 +1,43 @@
 function Person(username, email, password, cycle) {
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.cycle = cycle;
-}
+    var username = username,
+        email = email,
+        password = password,
+        cycle = cycle;
 
-Person.prototype.getUsername = function() {
-    return this.username;
-};
+    var getHash = function (hash) {
+        console.log(hash);
+    };
 
-Person.prototype.getEmail = function () {
-    return this.email;
-};
+    this.getUsername = function () {
+        return username;
+    };
 
-Person.prototype.getCycle = function() {
-    return this.cycle;
-};
+    this.getEmail = function () {
+        return email;
+    };
 
-Person.prototype.getPassword = function() {
-    return this._getHashPassword(getHash);
-};
+    this.getPassword = function () {
+        return this._getHashPassword(getHash);
+    };
 
-function getHash(hash) {
-    console.log(hash);
-}
+    this.getCycle = function () {
+        return cycle;
+    };
 
-Person.prototype._getHashPassword = function(callback) {
-    var hash = this.password;
-    var cycle = this.cycle;
-    var width = 0;
-    while(cycle) {
-        hash = md5(hash);
-        cycle -=1;
-        callback(hash);
-        while(width < 100) {
-            width += 100/cycle;
-            $('.progress-bar').css('width', width + '%');
+    this._getHashPassword = function (callback) {
+        var hash = password,
+            cycle = this.getCycle(),
+            width = 0;
+        while(cycle) {
+            hash = md5(hash);
+            cycle -=1;
+            callback(hash);
+            while(width < 100) {
+                width += 100/cycle;
+                $('.progress-bar').css('width', width + '%');
+            }
         }
-    }
-    return hash;
-};
+        return hash;
+    };
+
+}
