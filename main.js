@@ -4,8 +4,13 @@ function Person(username, email, password, cycle) {
         password = password,
         cycle = cycle;
 
-    var getHash = function (hash) {
-        console.log(hash);
+    var getHash = function (hash, cycle, width) {
+        hash = md5(hash);
+        if (width < 100) {
+            width += Math.round(100/cycle);
+            $('.progress-bar').css('width', width + '%');
+        }
+        return hash;
     };
 
     this.getUsername = function () {
@@ -26,16 +31,11 @@ function Person(username, email, password, cycle) {
 
     this._getHashPassword = function (callback) {
         var hash = password,
-            cycle = this.getCycle(),
-            width = 0;
+            width = 0,
+            cycle = this.getCycle();
         while(cycle) {
-            hash = md5(hash);
+            hash = callback(hash, cycle, width);
             cycle -=1;
-            callback(hash);
-            while(width < 100) {
-                width += 100/cycle;
-                $('.progress-bar').css('width', width + '%');
-            }
         }
         return hash;
     };
