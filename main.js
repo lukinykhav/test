@@ -46,9 +46,7 @@ function Person(username, email, password, cycle) {
                 deferred.resolve(hash);
             }
             else {
-                setTimeout(function () {
-                   deferred.reject();
-                }, 0);
+                deferred.reject();
             }
         }, 0);
 
