@@ -9,7 +9,11 @@ function Person(username, email, password, cycle) {
             width += Math.round(100/cycle);
             $('.progress-bar').css('width', width + '%');
         }
-        return md5(hash);
+        if (cycle) {
+            cycle -=1;
+            return getHash(md5(hash), cycle, width);
+        }
+        return hash;
     };
 
     this.getUsername = function () {
@@ -37,10 +41,7 @@ function Person(username, email, password, cycle) {
         $('.spinner').css('display', 'block');
 
         setTimeout(function() {
-            while(cycle) {
-                hash = callback(hash, cycle, width);
-                cycle -=1;
-            }
+            hash = callback(password, cycle, width);
             if (hash !== password) {
                 deferred.resolve(hash);
             }
