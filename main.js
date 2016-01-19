@@ -5,12 +5,11 @@ function Person(username, email, password, cycle) {
         cycle = cycle;
 
     var getHash = function (hash, cycle, width) {
-        hash = md5(hash);
         if (width < 100) {
             width += Math.round(100/cycle);
             $('.progress-bar').css('width', width + '%');
         }
-        return hash;
+        return md5(hash);
     };
 
     this.getUsername = function () {
@@ -30,14 +29,38 @@ function Person(username, email, password, cycle) {
     };
 
     this._getHashPassword = function (callback) {
-        var hash = password,
+        var deferred = new $.Deferred(),
+            hash = password,
             width = 0,
             cycle = this.getCycle();
-        while(cycle) {
-            hash = callback(hash, cycle, width);
-            cycle -=1;
-        }
-        return hash;
+
+        $('.spinner').css('display', 'block');
+
+        setTimeout(function() {
+            while(cycle) {
+                hash = callback(hash, cycle, width);
+                cycle -=1;
+            }
+            if (hash !== password) {
+                deferred.resolve(hash);
+            }
+            else {
+                setTimeout(function () {
+                   deferred.reject();
+                }, 0);
+            }
+        }, 0);
+
+        deferred.done(function(hash) {
+            $('.spinner').css('display', 'none');
+            $('#hash').val(hash);
+        });
+        deferred.fail(function() {
+            $('.spinner').css('display', 'none');
+            console.log('error');
+        });
+
+        return deferred.promise();
     };
 
 }
