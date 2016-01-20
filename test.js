@@ -9,10 +9,25 @@ QUnit.test("test", function() {
     notEqual(person.getCycle(), 'anna', 'Passed!');
 });
 
-QUnit.asyncTest('asynchronous test', function() {
-    console.log(person.getPassword());
+QUnit.test('asynchronous test', function(assert) {
+    expect(2);
+    var done1 = assert.async();
+
+    function getHash(hash, cycle) {
+        if (cycle) {
+            cycle -=1;
+            return getHash(md5(hash), cycle);
+        }
+        return hash;
+    }
+
     setTimeout(function() {
-        equal(person.getPassword().done(function() { return 'success';}), 'success', "Passed and ready to resume!");
+        person.getPassword()
+            .always(function() { done1();})
+            .done(function(hash1) {
+                assert.equal(hash1, getHash('123456', 3), "Passed and ready to resume!");
+            })
+            .fail(assert.equal('error', 'error', "Passed!"));
         start();
     }, 1000);
 });
