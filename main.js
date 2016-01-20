@@ -4,15 +4,14 @@ function Person(username, email, password, cycle) {
         password = password,
         cycle = cycle;
 
-    var getHash = function (hash, cycle, width) {
-        if (width < 100) {
-            width += Math.round(100/cycle);
-            $('.progress-bar').css('width', width + '%');
+    this.getHash = function (hash, cycle) {
+        for(var i = 0; i < cycle; i++) {
+            hash = md5(hash);
+            $('.progress-bar').css('width', 100/cycle*i + '%');
         }
-        if (cycle) {
-            cycle -=1;
-            return getHash(md5(hash), cycle, width);
-        }
+        $(".hash").attr("disabled", false).show();
+        $("#hash").attr("disabled", false).show();
+        $('.spinner').css('visibility', 'hidden');
         return hash;
     };
 
@@ -25,41 +24,47 @@ function Person(username, email, password, cycle) {
     };
 
     this.getPassword = function () {
-        return this._getHashPassword(getHash);
+        if (password === '') {
+            $('.pwd').append("<div class='has-error'><p>Enter password</p></div>");
+        } else {
+            return this._getHashPassword(this.getHash);
+        }
     };
 
     this.getCycle = function () {
-        return cycle;
+        if (cycle > 10000) {
+            $('.cycle').append("<div class='has-error'><p>Iteration mustn't greater than 10000</p></div>");
+        } else {
+            return cycle;
+        }
     };
 
     this._getHashPassword = function (callback) {
         var deferred = new $.Deferred(),
             hash = password,
-            width = 0,
             cycle = this.getCycle();
+            $('.spinner').css('visibility', 'visible');
+            $(".hash").attr("disabled", true).hide();
+            $("#hash").attr("disabled", true).hide();
 
-        $('.spinner').css('display', 'block');
+            setTimeout(function() {
+                hash = callback(password, cycle);
+                if (hash !== password) {
+                    deferred.resolve(hash);
+                }
+                else {
+                    deferred.reject();
+                }
+            }, 0);
 
-        setTimeout(function() {
-            hash = callback(password, cycle, width);
-            if (hash !== password) {
-                deferred.resolve(hash);
-            }
-            else {
-                deferred.reject();
-            }
-        }, 0);
+            deferred.done(function(hash) {
+                $('#hash').val(hash);
+            });
+            deferred.fail(function() {
+                console.log('error');
+            });
 
-        deferred.done(function(hash) {
-            $('.spinner').css('display', 'none');
-            $('#hash').val(hash);
-        });
-        deferred.fail(function() {
-            $('.spinner').css('display', 'none');
-            console.log('error');
-        });
-
-        return deferred.promise();
+            return deferred.promise();
     };
 
 }

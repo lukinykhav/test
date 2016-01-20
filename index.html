@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form>
+                <h2 class="form-signin-heading">Please sign in</h2>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" id="username">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email">
+                </div>
+                <div class="form-group pwd">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" id="pwd">
+                </div>
+                <div class="form-group cycle">
+                    <label for="cycle">Select number of cycle:</label>
+                    <input type="number" class="form-control" id="cycle">
+                </div>
+                <div class="row">
+                    <img src='default.gif' class="spinner" style="visibility: hidden">
+                    <div class="col-md-3">
+                        <btn class="hash btn btn-default">Submit</btn>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="hash">
+                    </div>
+                </div>
+                <br />
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="main.js"></script>
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="JavaScript-MD5-master/js/md5.min.js"></script>
+<script>
+    $(document).ready(function() {
+//        $('input').val('');
+        $('.hash').on('click', function() {
+            $('.has-error').remove();
+            var person = new Person($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
+            person.getPassword();
+        })
+    });
+</script>
