@@ -30,12 +30,16 @@
                     <input type="number" class="form-control" id="cycle">
                 </div>
                 <div class="row">
-                    <img src='default.gif' class="spinner" style="visibility: hidden">
-                    <div class="col-md-3">
-                        <btn class="hash btn btn-default">Submit</btn>
+                    <div class="spinner" style="display: none">
+                        <img src='default.gif'>
                     </div>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" id="hash">
+                    <div>
+                        <div class="col-md-3">
+                            <btn class="hash btn btn-default">Submit</btn>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="hash">
+                        </div>
                     </div>
                 </div>
                 <br />
@@ -59,6 +63,8 @@
 //        $('input').val('');
         $('.hash').on('click', function() {
             $('.has-error').remove();
+            $('.progress-bar').css('width', '0%');
+            $('.spinner').css('display', 'block');
             var person = new Person($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
             person.getPassword();
         })

@@ -1,10 +1,20 @@
 .spinner {
+    position: absolute;
+    width: 382px;
+    height: 51px;
+    z-index: 100;
+}
+
+.spinner img {
     height: 60px;
     width: 60px;
-    margin: 0 -225px;
-    position: absolute;
+    margin: 0 148px;
 }
 
 .has-error p {
    color: red;
+}
+
+.progress {
+    margin-top: 10px;
 }

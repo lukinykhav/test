@@ -9,9 +9,8 @@ function Person(username, email, password, cycle) {
             hash = md5(hash);
             $('.progress-bar').css('width', 100/cycle*i + '%');
         }
-        $(".hash").attr("disabled", false).show();
-        $("#hash").attr("disabled", false).show();
-        $('.spinner').css('visibility', 'hidden');
+
+        $('.spinner').css('display', 'none');
         return hash;
     };
 
@@ -43,9 +42,6 @@ function Person(username, email, password, cycle) {
         var deferred = new $.Deferred(),
             hash = password,
             cycle = this.getCycle();
-            $('.spinner').css('visibility', 'visible');
-            $(".hash").attr("disabled", true).hide();
-            $("#hash").attr("disabled", true).hide();
 
             setTimeout(function() {
                 hash = callback(password, cycle);
