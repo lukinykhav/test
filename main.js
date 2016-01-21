@@ -1,13 +1,16 @@
-function Person(username, email, password, cycle) {
+function Md5Hashing(username, email, password, cycle) {
     var username = username,
         email = email,
         password = password,
         cycle = cycle;
 
     this.getHash = function (hash, cycle) {
-        for(var i = 0; i < cycle; i++) {
+        console.log('md5');
+        var width = 0;
+        for(var i = 1; i <= cycle; i++) {
             hash = md5(hash);
-            $('.progress-bar').css('width', 100/cycle*i + '%');
+            width = 100/cycle*i;
+            $('.progress-bar').css('width', width + '%');
         }
 
         $('.spinner').css('display', 'none');
@@ -64,3 +67,20 @@ function Person(username, email, password, cycle) {
     };
 
 }
+
+function ShaHashing(username, email, password, cycle) {
+    Md5Hashing.apply(this, arguments);
+
+    this.getHash = function (hash, cycle) {
+        console.log('sha1');
+        var SHA1 = new Hashes.SHA1;
+        for(var i = 0; i < cycle; i++) {
+            hash = SHA1.hex(hash);
+            $('.progress-bar').css('width', 100/cycle*i + '%');
+        }
+
+        $('.spinner').css('display', 'none');
+        return hash;
+    };
+}
+

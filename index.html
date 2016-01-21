@@ -26,8 +26,22 @@
                     <input type="password" class="form-control" id="pwd">
                 </div>
                 <div class="form-group cycle">
-                    <label for="cycle">Select number of cycle:</label>
-                    <input type="number" class="form-control" id="cycle">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="cycle">Select number of cycle:</label>
+                            <input type="number" class="form-control" id="cycle">
+                        </div>
+                        <div class="dropdown col-md-6">
+                            <label for="cycle">Select algorithm:</label>
+                            <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Algorithm
+                                <!--<span class="caret"></span>-->
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">MD5</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">SHA1</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="spinner" style="display: none">
@@ -58,15 +72,32 @@
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="JavaScript-MD5-master/js/md5.min.js"></script>
+<script type="text/javascript" src="node_modules/jshashes/hashes.js"></script>
 <script>
     $(document).ready(function() {
 //        $('input').val('');
+        var dropdown = $(".dropdown-toggle");
+        $(function(){
+            $(".dropdown-menu li a").click(function(){
+                dropdown.text($(this).text());
+            });
+        });
+
         $('.hash').on('click', function() {
             $('.has-error').remove();
             $('.progress-bar').css('width', '0%');
-            $('.spinner').css('display', 'block');
-            var person = new Person($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
-            person.getPassword();
+            if (dropdown.text() === 'MD5') {
+                $('.spinner').css('display', 'block');
+                var person = new Md5Hashing($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
+                person.getPassword();
+            } else if (dropdown.text() === 'SHA1') {
+                $('.spinner').css('display', 'block');
+                var person = new ShaHashing($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
+                person.getPassword();
+            }
+            else {
+                $('.dropdown').append("<div class='has-error'><p>Select algorithm</p></div>");
+            }
         })
     });
 </script>

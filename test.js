@@ -1,6 +1,5 @@
-var person = new Person('anna', 'aaa@gmail.com', '123456', 3);
-    person.getPassword();
 QUnit.test("test", function() {
+    var person = new Md5Hashing('anna', 'aaa@gmail.com', '123456', 3);
     equal(person.getUsername(), 'anna', 'Passed!');
     equal(person.getEmail(), 'aaa@gmail.com', 'Passed!');
     equal(person.getCycle(), 3, 'Passed!');
@@ -10,6 +9,7 @@ QUnit.test("test", function() {
 });
 
 QUnit.test('asynchronous test', function(assert) {
+    var md5_hashing = new Md5Hashing('anna', 'aaa@gmail.com', '123456', 3);
     expect(2);
     var done1 = assert.async();
 
@@ -22,7 +22,7 @@ QUnit.test('asynchronous test', function(assert) {
     }
 
     setTimeout(function() {
-        person.getPassword()
+        md5_hashing.getPassword()
             .always(function() { done1();})
             .done(function(hash1) {
                 assert.equal(hash1, getHash('123456', 3), "Passed and ready to resume!");
@@ -30,6 +30,32 @@ QUnit.test('asynchronous test', function(assert) {
             .fail(assert.equal('error', 'error', "Passed!"));
         start();
     }, 1000);
+});
+
+
+QUnit.test('asynchronous test', function(assert) {
+   expect(2);
+    var done1 = assert.async();
+    var sha1_hashing = new ShaHashing('Piter', 'piter@gmail.com', 'qwerty', 1000);
+
+    function getHash(hash, cycle) {
+        var SHA1 = new Hashes.SHA1;
+        if (cycle) {
+            cycle -=1;
+            return getHash(SHA1.hex(hash), cycle);
+        }
+        return hash;
+    }
+    setTimeout(function() {
+        sha1_hashing.getPassword()
+            .always(function() { done1();})
+            .done(function(hash1) {
+                assert.equal(hash1, getHash('qwerty', 1000), "Passed and ready to resume!");
+            })
+            .fail(assert.equal('error', 'error', "Passed!"));
+        start();
+    }, 1000);
+
 });
 
 QUnit.done(function( details ) {
