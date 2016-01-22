@@ -1,4 +1,4 @@
-//;(function ($, window, document, undefined ) {
+;(function () {
     function Person(username, email, password, cycle) {
         var username = username,
             email = email,
@@ -66,4 +66,5 @@
         };
     }
 
-//})( jQuery, window, document );
+    return Person;
+}());
