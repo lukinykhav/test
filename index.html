@@ -53,20 +53,9 @@
 </div>
 </body>
 </html>
-<script src="main.js"></script>
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="JavaScript-MD5-master/js/md5.min.js"></script>
-<script>
-    $(document).ready(function() {
-//        $('input').val('');
-        $('.hash').on('click', function() {
-            $('.has-error').remove();
-            $('.progress-bar').css('width', '0%');
-            $('.spinner').css('display', 'block');
-            var person = new Person($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
-            person.getPassword();
-        })
-    });
-</script>
+<script src="js/hash.js"></script>
+<script src="js/main.js"></script>
