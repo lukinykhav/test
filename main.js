@@ -7,7 +7,6 @@ function Md5Hashing(username, email, password, cycle) {
     this.alg = new Hashes.MD5;
 
     this.getHash = function (hash, cycle) {
-        console.log(this.alg);
         var width = 0;
         for(var i = 1; i <= cycle; i++) {
             hash = this.alg.hex(hash);
