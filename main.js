@@ -4,11 +4,13 @@ function Md5Hashing(username, email, password, cycle) {
         password = password,
         cycle = cycle;
 
+    this.alg = new Hashes.MD5;
+
     this.getHash = function (hash, cycle) {
-        console.log('md5');
+        console.log(this.alg);
         var width = 0;
         for(var i = 1; i <= cycle; i++) {
-            hash = md5(hash);
+            hash = this.alg.hex(hash);
             width = 100/cycle*i;
             $('.progress-bar').css('width', width + '%');
         }
@@ -29,7 +31,7 @@ function Md5Hashing(username, email, password, cycle) {
         if (password === '') {
             $('.pwd').append("<div class='has-error'><p>Enter password</p></div>");
         } else {
-            return this._getHashPassword(this.getHash);
+            return this._getHashPassword(this.getHash.bind(this)).bind(this);
         }
     };
 
@@ -71,16 +73,7 @@ function Md5Hashing(username, email, password, cycle) {
 function ShaHashing(username, email, password, cycle) {
     Md5Hashing.apply(this, arguments);
 
-    this.getHash = function (hash, cycle) {
-        console.log('sha1');
-        var SHA1 = new Hashes.SHA1;
-        for(var i = 0; i < cycle; i++) {
-            hash = SHA1.hex(hash);
-            $('.progress-bar').css('width', 100/cycle*i + '%');
-        }
-
-        $('.spinner').css('display', 'none');
-        return hash;
-    };
+    this.alg = new Hashes.SHA1;
 }
+
 

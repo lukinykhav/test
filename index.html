@@ -70,28 +70,24 @@
 <script>
     $(document).ready(function() {
 //        $('input').val('');
-        var dropdown = $(".dropdown-toggle");
+
         $(function(){
             $(".dropdown-menu li a").click(function(){
-                dropdown.text($(this).text());
+                $(".dropdown-toggle").text($(this).text());
+                $(".dropdown-toggle").val($(this).text());
             });
         });
 
         $('.hash').on('click', function() {
+            var hash_func = $(".dropdown-toggle").val();
             $('.has-error').remove();
             $('.progress-bar').css('width', '0%');
-            if (dropdown.text() === 'MD5') {
-                $('.spinner').css('display', 'block');
+            if (hash_func === 'MD5') {
                 var person = new Md5Hashing($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
-                person.getPassword();
-            } else if (dropdown.text() === 'SHA1') {
-                $('.spinner').css('display', 'block');
+            } else {
                 var person = new ShaHashing($('#username').val(), $('#email').val(), $('#pwd').val(), $('#cycle').val());
-                person.getPassword();
             }
-            else {
-                $('.dropdown').append("<div class='has-error'><p>Select algorithm</p></div>");
-            }
+            person.getPassword();
         })
     });
 </script>
