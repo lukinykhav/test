@@ -14,9 +14,10 @@ QUnit.test('asynchronous test', function(assert) {
     var done1 = assert.async();
 
     function getHash(hash, cycle) {
+        var MD5 = new Hashes.MD5();
         if (cycle) {
             cycle -=1;
-            return getHash(md5(hash), cycle);
+            return getHash(MD5.hex(hash), cycle);
         }
         return hash;
     }
