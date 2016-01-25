@@ -32,6 +32,7 @@ function Md5Hashing(username, email, password, cycle) {
         } else {
             var getHash = this.getHash.bind(this),
                 getHashPassword = this._getHashPassword.bind(this);
+            $('.spinner').css('display', 'block');
             return getHashPassword(getHash);
         }
     };
@@ -39,6 +40,7 @@ function Md5Hashing(username, email, password, cycle) {
     this.getCycle = function () {
         if (cycle > 10000) {
             $('.cycle').append("<div class='has-error'><p>Iteration mustn't greater than 10000</p></div>");
+            $('#hash').val('');
         } else {
             return cycle;
         }
