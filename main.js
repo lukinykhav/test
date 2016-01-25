@@ -30,7 +30,9 @@ function Md5Hashing(username, email, password, cycle) {
         if (password === '') {
             $('.pwd').append("<div class='has-error'><p>Enter password</p></div>");
         } else {
-            return this._getHashPassword(this.getHash.bind(this)).bind(this);
+            var getHash = this.getHash.bind(this),
+                getHashPassword = this._getHashPassword.bind(this);
+            return getHashPassword(getHash);
         }
     };
 
@@ -47,24 +49,24 @@ function Md5Hashing(username, email, password, cycle) {
             hash = password,
             cycle = this.getCycle();
 
-            setTimeout(function() {
-                hash = callback(password, cycle);
-                if (hash !== password) {
-                    deferred.resolve(hash);
-                }
-                else {
-                    deferred.reject();
-                }
-            }, 0);
+        setTimeout(function() {
+            hash = callback(password, cycle);
+            if (hash !== password) {
+                deferred.resolve(hash);
+            }
+            else {
+                deferred.reject();
+            }
+        }, 0);
 
-            deferred.done(function(hash) {
-                $('#hash').val(hash);
-            });
-            deferred.fail(function() {
-                console.log('error');
-            });
+        deferred.done(function(hash) {
+            $('#hash').val(hash);
+        });
+        deferred.fail(function() {
+            console.log('error');
+        });
 
-            return deferred.promise();
+        return deferred.promise();
     };
 
 }
