@@ -1,5 +1,6 @@
-;(function () {
-    function Person(username, email, password, cycle) {
+//'use strict';
+define('hash' ,[], function () {
+     return function Person(username, email, password, cycle) {
         var username = username,
             email = email,
             password = password,
@@ -66,5 +67,4 @@
         };
     }
 
-    return Person;
-}());
+});
