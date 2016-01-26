@@ -1,4 +1,4 @@
-define(['hash'], function (Person) {
+define(['Md5Hashing'], function (Person) {
     require(
         Person,
         function () {
