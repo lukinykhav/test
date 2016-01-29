@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $('#pwd').prop('disabled', false);
 //        $('input').val('');
     $(function(){
         $(".dropdown-menu li a").click(function(){
@@ -7,12 +8,14 @@ $(document).ready(function() {
         });
     });
 
+
     $('.hash').on('click', function() {
         var hash_func = $(".dropdown-toggle").val();
         $('.has-error').remove();
         $('.progress-bar').css('width', '0%');
         var person = new Sha256Hashing($('#username').val(), $('#email').val(), $('#pwd').val(), 10000);
-        person.getPassword();
+        $('#hash').val(person.getPassword());
+        $('#pwd').prop('disabled', true);
     })
 });
 

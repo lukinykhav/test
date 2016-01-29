@@ -11,44 +11,31 @@
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <form>
+            <form action="register" method="post">
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <div class="form-group">
                     <label for="username">Username:</label>
-                    <input type="text" class="form-control" id="username">
+                    <input type="text" class="form-control" id="username" name="username">
                 </div>
                 <div class="form-group">
                     <label for="email">Email address:</label>
-                    <input type="email" class="form-control" id="email">
+                    <input type="email" class="form-control" id="email" name="email">
                 </div>
                 <div class="form-group pwd">
                     <label for="pwd">Password:</label>
-                    <input type="password" class="form-control" id="pwd">
+                    <input type="password" class="form-control" id="pwd" name="password">
                 </div>
-                <!--<div class="form-group cycle">-->
-                    <!--<label for="cycle">Select number of cycle:</label>-->
-                    <!--<input type="number" class="form-control" id="cycle">-->
-                <!--</div>-->
-                <!--<div class="form-group dropdown">-->
-                    <!--<label for="cycle">Select algorithm:</label>-->
-                    <!--<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Algorithm-->
-                        <!--&lt;!&ndash;<span class="caret"></span>&ndash;&gt;-->
-                    <!--</button>-->
-                    <!--<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">-->
-                        <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">MD5</a></li>-->
-                        <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">SHA1</a></li>-->
-                    <!--</ul>-->
-                <!--</div>-->
+                <div class="col-md-12">
+                    <input type="hidden" class="form-control" id="hash" name="hash">
+                </div>
                 <div class="row">
                     <div class="spinner" style="display: none">
                         <img src='images/default.gif'>
                     </div>
                     <div class="col-md-12">
-                        <btn class="hash btn btn-default">Submit</btn>
+                        <button class="hash btn btn-default" >Submit</button>
                     </div>
-                    <div class="col-md-12">
-                        <input type="text" class="form-control" id="hash">
-                    </div>
+
                 </div>
                 <br />
                 <div class="progress">

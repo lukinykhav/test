@@ -6,18 +6,6 @@ function Md5Hashing(username, email, password, cycle) {
 
     this.alg = new Hashes.MD5;
 
-    this.getHash = function (hash, cycle) {
-        var width = 0;
-        for (var i = 1; i <= cycle; i++) {
-            hash = this.alg.hex(hash);
-            width = 100 / cycle * i;
-            $('.progress-bar').css('width', width + '%');
-        }
-
-        $('.spinner').css('display', 'none');
-        return hash;
-    };
-
     this.getUsername = function () {
         return username;
     };
@@ -30,10 +18,17 @@ function Md5Hashing(username, email, password, cycle) {
         if (password === '') {
             $('.pwd').append("<div class='has-error'><p>Enter password</p></div>");
         } else {
-            var getHash = this.getHash.bind(this),
-                getHashPassword = this._getHashPassword.bind(this);
             $('.spinner').css('display', 'block');
-            return getHashPassword(getHash);
+            var width = 0,
+                hash = password;
+            for (var i = 1; i <= cycle; i++) {
+                hash = this.alg.hex(hash);
+                width = 100 / cycle * i;
+                $('.progress-bar').css('width', width + '%');
+            }
+
+            $('.spinner').css('display', 'none');
+            return hash;
         }
     };
 
@@ -46,28 +41,4 @@ function Md5Hashing(username, email, password, cycle) {
         }
     };
 
-    this._getHashPassword = function (callback) {
-        var deferred = new $.Deferred(),
-            hash = password,
-            cycle = this.getCycle();
-
-        setTimeout(function () {
-            hash = callback(password, cycle);
-            if (hash !== password) {
-                deferred.resolve(hash);
-            }
-            else {
-                deferred.reject();
-            }
-        }, 0);
-
-        deferred.done(function (hash) {
-            $('#hash').val(hash);
-        });
-        deferred.fail(function () {
-            console.log('error');
-        });
-
-        return deferred.promise();
-    };
 }

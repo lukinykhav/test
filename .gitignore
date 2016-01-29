@@ -1,1 +1,5 @@
 node_modules/
+app/bin/
+app/node_modules/
+app/app/
+app/npm-debug.log
