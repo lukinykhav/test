@@ -5,15 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-
-var mongoose = require('mongoose');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-
+var jsonfile = require('jsonfile');
+var util = require('util');
+var expressSession = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var login = require('./routes/login');
 
 var app = express();
 
@@ -28,50 +25,66 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-app.use(require('express-session')({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-app.use('/', routes);
-
-//// passport config
-//var Account = require('./models/account');
-//passport.use(new LocalStrategy(Account.authenticate()));
-//passport.serializeUser(Account.serializeUser());
-//passport.deserializeUser(Account.deserializeUser());
-
-// mongoose
-//mongoose.connect('mongodb://localhost/passport_local_mongoose_express4');
-
-
+app.use(expressSession({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }));
 
 app.use('/', routes);
 app.use('/users', users);
 //app.use('/login', login);
 
-
-
 app.get('/register', function(req, res, next) {
-  res.sendfile('public/login.html');
+  res.sendfile('public/register.html');
 });
 
 app.post('/register', function (req, res) {
-  var data = req.body;
 
-  fs.appendFile('public/data.json', JSON.stringify(data), function (err) {
+  //var obj = '{"employees":[' +
+  //    '{"firstName":"Jerry","lastName":"Negrell","time":"9:15 am","email":"jerry@bah.com","phone":"800-597-9405","image":"images/jerry.jpg" },' +
+  //    '{"firstName":"Ed","lastName":"Snide","time":"9:00 am","email":"edward@bah.com","phone":"800-597-9406","image":"images/ed.jpg" },' +
+  //    '{"firstName":"Pattabhi","lastName":"Nunn","time":"10:15 am","email":"pattabhi@bah.com","phone":"800-597-9407","image":"images/pattabhi.jpg" }'+
+  //    ']}';
+  var file = fs.readFileSync('public/data.json');
+  var data = JSON.parse(file);  //parse the JSON
 
-  });
-  //fs.writeFileSync('public/data.json', data);
+  for (var i = 0; i < data.employees.length; i++){
+    if (data.employees[i].email == req.body.email){
+      var email_exist = true;
+    }
+    else {
+      var email_exist = false;
+    }
+  }
+  if (!email_exist) {
+    data.employees.push(req.body);
+    jsonfile.writeFile('public/data.json', data, function(err) {
+      console.error(err)
+    });
+    res.send(data);
+  }
 
-  res.send('You are registred!');
 });
+
+app.get('/login', function (req, res) {
+  res.sendfile('public/login.html');
+});
+
+app.post('/login', function(req, res) {
+  var file = fs.readFileSync('public/data.json');
+  var data = JSON.parse(file);  //parse the JSON
+
+  for (var i = 0; i < data.employees.length; i++){
+    if (data.employees[i].email == req.body.email && data.employees[i].hash == req.body.hash){
+      req.session.username = data.employees[i].username;
+      res.redirect('/');
+    }
+  }
+  res.send(req.session.username);
+});
+
+//function findUser(email, hash) {
+//  if(hash != null) {
+//    console.log(hash);
+//  }
+//}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
