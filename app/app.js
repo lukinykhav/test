@@ -6,8 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var jsonfile = require('jsonfile');
-var util = require('util');
 var expressSession = require('express-session');
+if (typeof localStorage === "undefined" || localStorage === null) {
+  var LocalStorage = require('node-localstorage').LocalStorage;
+  localStorage = new LocalStorage('./scratch');
+}
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -18,18 +21,14 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(expressSession({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }));
+app.use(expressSession({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true}));
 
 app.use('/', routes);
 app.use('/users', users);
-//app.use('/login', login);
 
 app.get('/register', function(req, res, next) {
   res.sendfile('public/register.html');
@@ -58,7 +57,10 @@ app.post('/register', function (req, res) {
     jsonfile.writeFile('public/data.json', data, function(err) {
       console.error(err)
     });
-    res.send(data);
+    res.redirect('/login');
+  }
+  else {
+    res.send('This email is exist');
   }
 
 });
@@ -73,18 +75,30 @@ app.post('/login', function(req, res) {
 
   for (var i = 0; i < data.employees.length; i++){
     if (data.employees[i].email == req.body.email && data.employees[i].hash == req.body.hash){
-      req.session.username = data.employees[i].username;
+      if(req.body.remember == 'on') {
+        localStorage.setItem('email', data.employees[i].email);
+        localStorage.setItem('password', data.employees[i].hash);
+        localStorage.setItem('username', data.employees[i].username);
+        //  res.cookie('email', data.employees[i].email);
+        //  res.cookie('password', data.employees[i].hash);
+      }
+      else {
+          req.session.username = data.employees[i].username;
+      }
       res.redirect('/');
+    }
+    else {
+      res.redirect('/login');
     }
   }
   res.send(req.session.username);
 });
 
-//function findUser(email, hash) {
-//  if(hash != null) {
-//    console.log(hash);
-//  }
-//}
+app.get('/logout', function (req, res) {
+  localStorage.clear();
+  delete req.session.username;
+  res.redirect('/login');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
