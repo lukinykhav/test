@@ -7,10 +7,6 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var jsonfile = require('jsonfile');
 var expressSession = require('express-session');
-if (typeof localStorage === "undefined" || localStorage === null) {
-  var LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage('./scratch');
-}
 
 var routes = require('./routes/index');
 var app = express();
@@ -28,7 +24,12 @@ app.use(expressSession({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resa
 app.use('/', routes);
 
 app.get('/register', function(req, res, next) {
-  res.sendfile('public/register.html');
+  if(!req.session.username) {
+    res.sendfile('public/register.html');
+  }
+  else {
+    res.redirect('/');
+  }
 });
 
 app.post('/register', function (req, res) {
@@ -64,36 +65,42 @@ app.post('/register', function (req, res) {
 });
 
 app.get('/login', function (req, res) {
-  res.sendfile('public/login.html');
+  if(!req.session.username) {
+    res.sendfile('public/login.html');
+  }
+  else {
+    res.redirect('/');
+  }
 });
 
-app.post('/login', function(req, res) {
+app.post('/login', function(req, res, next) {
   if (fs.existsSync('public/data.json')) {
     var file = fs.readFileSync('public/data.json');
-    var data = JSON.parse(file);  //parse the JSON
-
-    for (var i = 0; i < data.users.length; i++){
-      if (data.users[i].email == req.body.email && data.users[i].hash == req.body.hash){
-        if(req.body.remember == 'on') {
-          localStorage.setItem('email', data.users[i].email);
-          localStorage.setItem('password', data.users[i].hash);
-          localStorage.setItem('username', data.users[i].username);
-        }
-        else {
-          req.session.username = data.users[i].username;
-        }
-        res.redirect('/');
-      }
+    var user = searchUser(file, req.body.email, req.body.hash);
+    if (user) {
+      req.session.username = user.username;
+      res.redirect('/');
     }
-    res.redirect('/login');
+    else {
+      res.redirect('/login');
+    }
   }
   else {
     res.redirect('/register');
   }
 });
 
+function searchUser(file, email, hash) {
+  var data = JSON.parse(file);  //parse the JSON
+  for (var i = 0; i < data.users.length; i++){
+      if (data.users[i].email == email && data.users[i].hash == hash) {
+        return data.users[i];
+      }
+  }
+  return false;
+}
+
 app.get('/logout', function (req, res) {
-  localStorage.clear();
   delete req.session.username;
   res.redirect('/login');
 });

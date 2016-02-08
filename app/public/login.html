@@ -10,27 +10,30 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <a href="/register">Sing up</a>
         </div>
         <div class="col-md-4">
-            <form action="login" method="post">
+            <form class="form-signin" role="form" action="login" method="post">
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <div class="form-group">
-                    <label for="email">Email address:</label>
-                    <input type="email" class="form-control" id="email" name="email">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email address" required autofocus>
                 </div>
                 <div class="form-group pwd">
-                    <label for="pwd">Password:</label>
-                    <input type="password" class="form-control" id="pwd" name="password">
+                    <input type="password" class="form-control" id="pwd" name="password" placeholder="Password" required>
                 </div>
-                <div class="col-md-12">
-                    <input type="hidden" class="form-control" id="hash" name="hash">
+                <input type="hidden" class="form-control" id="hash" name="hash">
+                <div class="form-group">
+                    <input type="checkbox" class="remember" name="remember"> Remember me
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <button class="hash btn btn-default" >Submit</button>
-                        <label><input type="checkbox" name="remember"/> remember me</label>
+                        <button class="hash btn btn-lg btn-primary btn-block">Sign in</button>
+                        <br />
                     </div>
+                </div>
+                <div class="form-group">
+                    <a class="btn btn-lg btn-primary btn-block" href="/register">
+                        Sign up
+                    </a>
                 </div>
             </form>
         </div>
@@ -45,4 +48,4 @@
 <script src="javascripts/Md5Hashing.js"></script>
 <script src="javascripts/Sha256Hashing.js"></script>
 <script src="javascripts/jshashes/hashes.js"></script>
-<!--<script src="javascripts/requirejs/require.js" data-main="main"></script>-->
+<script src="javascripts/localStorage.js"></script>

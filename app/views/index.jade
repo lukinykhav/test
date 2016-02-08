@@ -1,6 +1,20 @@
 extends layout
-
 block content
   h1= title
-  p Welcome, #{username}
-  a(href='/logout') logout
+  .container
+    .jumbotron
+      h1 Wellcome, #{username}
+      p
+        a.logout.btn.btn-lg.btn-primary(href='/logout', role='button') Logout
+
+  script(src='//code.jquery.com/jquery-1.12.0.min.js')
+  script(src='//code.jquery.com/jquery-migrate-1.2.1.min.js')
+  script(type='text/javascript').
+    $(document).ready(function() {
+      $('.logout').on('click', function(){
+        if (localStorage.length != 0) {
+          localStorage.removeItem("email");
+          localStorage.removeItem("password");
+        }
+      });
+    });

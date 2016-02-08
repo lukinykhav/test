@@ -2,9 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <title>Title</title>
 </head>
 <body>
-    <h1>Welcome, !</h1>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Wellcome</h1>
+        <p><a class="btn btn-lg btn-success" href="#" role="button">Logout</a></p>
+    </div>
+</div>
 </body>
 </html>
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.logout').on('click', function(){
+            localStorage.removeItem("email");
+            localStorage.removeItem("password");
+        });
+    });
+</script>
