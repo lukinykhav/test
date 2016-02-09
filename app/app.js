@@ -38,14 +38,14 @@ app.post('/register', function (req, res) {
     var file = fs.readFileSync('public/data.json');
     var data = JSON.parse(file);  //parse the JSON
 
-    for (var i = 0; i < data.users.length; i++){
-      if (data.users[i].email == req.body.email){
+    for (user in data) {
+      if(user == req.body.email) {
         email_exist = true;
       }
     }
     if (!email_exist) {
-      data.users.push(req.body);
-      jsonfile.writeFile('public/data.json', data, function(err) {
+      data[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
+      fs.writeFile('public/data.json', JSON.stringify(data), function(err) {
         console.error(err)
       });
       res.redirect('/login');
@@ -55,13 +55,11 @@ app.post('/register', function (req, res) {
     }
   }
   else {
-    var obj = '{"users":[' +
-        '{"username":"' + req.body.username + '","email":"' + req.body.email + '","hash":"' + req.body.hash + '"}' +
-        ']}';
-    fs.writeFile('public/data.json', obj);
+    var obj = {};
+    obj[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
+    fs.writeFile('public/data.json', JSON.stringify(obj));
     res.redirect('/login');
   }
-
 });
 
 app.get('/login', function (req, res) {
@@ -76,9 +74,10 @@ app.get('/login', function (req, res) {
 app.post('/login', function(req, res, next) {
   if (fs.existsSync('public/data.json')) {
     var file = fs.readFileSync('public/data.json');
-    var user = searchUser(file, req.body.email, req.body.hash);
-    if (user) {
-      req.session.username = user.username;
+    var data = JSON.parse(file);
+    var username = searchUser(file, req.body.email, req.body.hash);
+    if (username) {
+      req.session.username = username;
       res.redirect('/');
     }
     else {
@@ -92,10 +91,13 @@ app.post('/login', function(req, res, next) {
 
 function searchUser(file, email, hash) {
   var data = JSON.parse(file);  //parse the JSON
-  for (var i = 0; i < data.users.length; i++){
-      if (data.users[i].email == email && data.users[i].hash == hash) {
-        return data.users[i];
-      }
+
+  for (user in data) {
+    data[user] = JSON.parse(data[user]);
+    if(user == email && data[user].hash == hash) {
+      return data[user].name;
+    }
+
   }
   return false;
 }
