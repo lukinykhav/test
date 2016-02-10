@@ -8,6 +8,8 @@ var fs = require('fs');
 var jsonfile = require('jsonfile');
 var expressSession = require('express-session');
 
+var router = express.Router();
+
 var routes = require('./routes/index');
 var app = express();
 
@@ -21,91 +23,105 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true}));
 
+
+// Load required packages
+var userController = require('./controllers/user');
+
+app.get('/register', userController.getUsers);
+
+app.post('/register', userController.postUsers);
+
+app.get('/login', userController.login);
+
+app.post('/login', userController.loginUser);
+
+app.get('/logout', userController.logout);
+
 app.use('/', routes);
-
-app.get('/register', function(req, res, next) {
-  if(!req.session.username) {
-    res.sendfile('public/register.html');
-  }
-  else {
-    res.redirect('/');
-  }
-});
-
-app.post('/register', function (req, res) {
-  var email_exist = false;
-  if (fs.existsSync('public/data.json')) {
-    var file = fs.readFileSync('public/data.json');
-    var data = JSON.parse(file);  //parse the JSON
-
-    for (user in data) {
-      if(user == req.body.email) {
-        email_exist = true;
-      }
-    }
-    if (!email_exist) {
-      data[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
-      fs.writeFile('public/data.json', JSON.stringify(data), function(err) {
-        console.error(err)
-      });
-      res.redirect('/login');
-    }
-    else {
-      res.send('This email is exist');
-    }
-  }
-  else {
-    var obj = {};
-    obj[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
-    fs.writeFile('public/data.json', JSON.stringify(obj));
-    res.redirect('/login');
-  }
-});
-
-app.get('/login', function (req, res) {
-  if(!req.session.username) {
-    res.sendfile('public/login.html');
-  }
-  else {
-    res.redirect('/');
-  }
-});
-
-app.post('/login', function(req, res, next) {
-  if (fs.existsSync('public/data.json')) {
-    var file = fs.readFileSync('public/data.json');
-    var data = JSON.parse(file);
-    var username = searchUser(file, req.body.email, req.body.hash);
-    if (username) {
-      req.session.username = username;
-      res.redirect('/');
-    }
-    else {
-      res.redirect('/login');
-    }
-  }
-  else {
-    res.redirect('/register');
-  }
-});
-
-function searchUser(file, email, hash) {
-  var data = JSON.parse(file);  //parse the JSON
-
-  for (user in data) {
-    data[user] = JSON.parse(data[user]);
-    if(user == email && data[user].hash == hash) {
-      return data[user].name;
-    }
-
-  }
-  return false;
-}
-
-app.get('/logout', function (req, res) {
-  delete req.session.username;
-  res.redirect('/login');
-});
+//
+//app.get('/register', function(req, res, next) {
+//  if(!req.session.username) {
+//    res.sendfile('public/register.html');
+//  }
+//  else {
+//    res.redirect('/');
+//  }
+//});
+//
+//app.post('/register', function (req, res) {
+//  var email_exist = false;
+//  if (fs.existsSync('public/data.json')) {
+//    var file = fs.readFileSync('public/data.json');
+//    var data = JSON.parse(file);  //parse the JSON
+//
+//    for (user in data) {
+//      if(user == req.body.email) {
+//        email_exist = true;
+//      }
+//    }
+//    if (!email_exist) {
+//      data[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
+//      fs.writeFile('public/data.json', JSON.stringify(data), function(err) {
+//        console.error(err)
+//      });
+//      res.redirect('/login');
+//    }
+//    else {
+//      res.send('This email is exist');
+//    }
+//  }
+//  else {
+//    var obj = {};
+//    obj[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
+//    fs.writeFile('public/data.json', JSON.stringify(obj));
+//    res.redirect('/login');
+//  }
+//});
+//
+//app.get('/login', function (req, res) {
+//  if(!req.session.username) {
+//    res.sendfile('public/login.html');
+//  }
+//  else {
+//    res.redirect('/');
+//  }
+//});
+//
+//app.post('/login', function(req, res, next) {
+//  if (fs.existsSync('public/data.json')) {
+//    var file = fs.readFileSync('public/data.json');
+//    var data = JSON.parse(file);
+//    var username = searchUser(file, req.body.email, req.body.hash);
+//    if (username) {
+//      req.session.username = username;
+//      res.redirect('/');
+//    }
+//    else {
+//      res.redirect('/login');
+//    }
+//  }
+//  else {
+//    res.redirect('/register');
+//  }
+//});
+//
+//function searchUser(file, email, hash) {
+//  var data = JSON.parse(file);  //parse the JSON
+//
+//  for (user in data) {
+//    data[user] = JSON.parse(data[user]);
+//    if(user == email && data[user].hash == hash) {
+//      return data[user].name;
+//    }
+//
+//  }
+//  return false;
+//}
+//
+//app.get('/logout', function (req, res) {
+//  delete req.session.username;
+//  res.redirect('/login');
+//});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
