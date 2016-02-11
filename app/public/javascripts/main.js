@@ -1,22 +1,50 @@
 $(document).ready(function() {
-    $('#pwd').prop('disabled', false);
-    $('input').val('');
-    $(function(){
-        $(".dropdown-menu li a").click(function(){
-            $(".dropdown-toggle").text($(this).text());
-            $(".dropdown-toggle").val($(this).text());
-        });
+    $('#login-form-link').click(function(e) {
+        $("#login-form").delay(100).fadeIn(100);
+        $("#register-form").fadeOut(100);
+        $('#register-form-link').removeClass('active');
+        $(this).addClass('active');
+        e.preventDefault();
+    });
+    $('#register-form-link').click(function(e) {
+        $("#register-form").delay(100).fadeIn(100);
+        $("#register-form").prop('disabled', true);
+        $("#login-form").fadeOut(100);
+        $('#login-form-link').removeClass('active');
+        $(this).addClass('active');
+        e.preventDefault();
     });
 
-    $('.hash').on('click', function() {
-        var hash_func = $(".dropdown-toggle").val();
-        $('.has-error').remove();
-        $('.progress-bar').css('width', '0%');
-        var person = new Sha256Hashing($('#username').val(), $('#email').val(), $('#pwd').val(), 10000);
-        $('#hash').val(person.getPassword());
-        if($('#email').is(":valid")) {
-            $('#pwd').prop('disabled', true);
+    $('.btn').on('click', function() {
+        var form = $(this).parents('form');
+        var username = $('#username').val(),
+            email = form.find('input.email').val(),
+            password = form.find('input.password').val();
+        var person = new Sha256Hashing(username, email, password, 10000),
+            hash = person.getPassword();
+
+        if($(this).is('#register-submit')){
+            $.ajax({
+                type: "POST",
+                url: '/signup',
+                data: {username: username, email: email, hash: hash},
+                success: function(res) {
+                    console.log(res);
+                }
+            });
         }
+        else if($(this).is('#login-submit')) {
+            console.log(hash);
+            $.ajax({
+                type: "POST",
+                url: '/signin',
+                data: {email: email, hash: hash},
+                success: function (username) {
+                    console.log(username);
+                }
+            });
+        }
+
     });
 
 });

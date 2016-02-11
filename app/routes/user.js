@@ -15,35 +15,19 @@ app.use(cookieParser());
 
 exports.postUsers = function(req, res) {
     User.addUser(req.body);
-    res.sendfile('public/login.html');
-};
-
-exports.getUsers = function(req, res) {
-    res.sendfile('public/register.html');
+    res.send('success');
 };
 
 exports.loginUser = function(req, res) {
     var username = User.getUser(req.body);
     if(username) {
-        req.session.username = username;
-
-        res.redirect('/');
+        res.send(req.session.username = username);
     }
     else {
-        res.redirect('/login');
-    }
-};
-
-exports.login = function(req, res) {
-    if(!req.session.username) {
-        res.sendfile('public/login.html');
-    }
-    else {
-        res.redirect('/');
+        res.send('ssddad');
     }
 };
 
 exports.logout = function(req, res) {
     delete req.session.username;
-    res.redirect('/login');
 };

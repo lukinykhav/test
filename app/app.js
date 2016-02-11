@@ -10,7 +10,6 @@ var expressSession = require('express-session');
 
 var router = express.Router();
 
-var routes = require('./routes/index');
 var app = express();
 
 // view engine setup
@@ -23,31 +22,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true}));
 
-
 // Load required packages
-var userController = require('./controllers/user');
+var user = require('./routes/user');
 
-app.get('/register', userController.getUsers);
+app.post('/signup', user.postUsers);
 
-app.post('/register', userController.postUsers);
+app.post('/signin', user.loginUser);
 
-app.get('/login', userController.login);
+app.post('/logout', user.logout);
 
-app.post('/login', userController.loginUser);
-
-app.get('/logout', userController.logout);
-
-app.use('/', routes);
-//
-//app.get('/register', function(req, res, next) {
-//  if(!req.session.username) {
-//    res.sendfile('public/register.html');
-//  }
-//  else {
-//    res.redirect('/');
-//  }
-//});
-//
 //app.post('/register', function (req, res) {
 //  var email_exist = false;
 //  if (fs.existsSync('public/data.json')) {
@@ -77,16 +60,6 @@ app.use('/', routes);
 //    res.redirect('/login');
 //  }
 //});
-//
-//app.get('/login', function (req, res) {
-//  if(!req.session.username) {
-//    res.sendfile('public/login.html');
-//  }
-//  else {
-//    res.redirect('/');
-//  }
-//});
-//
 //app.post('/login', function(req, res, next) {
 //  if (fs.existsSync('public/data.json')) {
 //    var file = fs.readFileSync('public/data.json');
@@ -103,24 +76,6 @@ app.use('/', routes);
 //  else {
 //    res.redirect('/register');
 //  }
-//});
-//
-//function searchUser(file, email, hash) {
-//  var data = JSON.parse(file);  //parse the JSON
-//
-//  for (user in data) {
-//    data[user] = JSON.parse(data[user]);
-//    if(user == email && data[user].hash == hash) {
-//      return data[user].name;
-//    }
-//
-//  }
-//  return false;
-//}
-//
-//app.get('/logout', function (req, res) {
-//  delete req.session.username;
-//  res.redirect('/login');
 //});
 
 // catch 404 and forward to error handler
@@ -156,3 +111,5 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+
