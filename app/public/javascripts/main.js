@@ -47,14 +47,17 @@ $(document).ready(function() {
                 url: '/signin',
                 data: {email: email, hash: hash},
                 success: function (username) {
-                    $('.container').load('views/main.html', function() {
-                        $('h1').append(username);
-                    });
+                    if(username) {
+                        $('.container').load('views/main.html', function() {
+                            $('h1').append(username);
+                        });
+                    }
+                    else {
+                        console.log('incorrect email or password');
+                    }
                 }
             });
         }
-
     });
-
 });
 

@@ -18,7 +18,7 @@ exports.getUser = function(req) {
     var data = JSON.parse(file);  //parse the JSON
     for (var user in data) {
         data[user] = JSON.parse(data[user]);
-        if(user == req.email) {
+        if(user == req.email && data[user].hash == req.hash) {
             return data[user].name;
         }
     }

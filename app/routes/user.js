@@ -39,7 +39,7 @@ exports.loginUser = function(req, res) {
         res.send(req.session.username = username);
     }
     else {
-        res.send('ssddad');
+        res.send(false);
     }
 };
 
