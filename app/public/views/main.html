@@ -8,8 +8,8 @@
 <body>
 <div class="container">
     <div class="jumbotron">
-        <h1>Wellcome</h1>
-        <p><a class="btn btn-lg btn-success" href="#" role="button">Logout</a></p>
+        <h1 class="username">Wellcome, </h1>
+        <p><a class="btn btn-lg btn-success logout" href="" role="button">Logout</a></p>
     </div>
 </div>
 </body>
@@ -19,6 +19,13 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('.logout').on('click', function(){
+            $.ajax({
+                type: "GET",
+                url: '/logout',
+                success: function(){
+                    $('.container').load('index.html');
+                }
+            });
             localStorage.removeItem("email");
             localStorage.removeItem("password");
         });

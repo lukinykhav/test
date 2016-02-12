@@ -1,14 +1,11 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var jsonfile = require('jsonfile');
 var expressSession = require('express-session');
-
-var router = express.Router();
 
 var app = express();
 
@@ -30,53 +27,6 @@ app.post('/signup', user.postUsers);
 app.post('/signin', user.loginUser);
 
 app.post('/logout', user.logout);
-
-//app.post('/register', function (req, res) {
-//  var email_exist = false;
-//  if (fs.existsSync('public/data.json')) {
-//    var file = fs.readFileSync('public/data.json');
-//    var data = JSON.parse(file);  //parse the JSON
-//
-//    for (user in data) {
-//      if(user == req.body.email) {
-//        email_exist = true;
-//      }
-//    }
-//    if (!email_exist) {
-//      data[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
-//      fs.writeFile('public/data.json', JSON.stringify(data), function(err) {
-//        console.error(err)
-//      });
-//      res.redirect('/login');
-//    }
-//    else {
-//      res.send('This email is exist');
-//    }
-//  }
-//  else {
-//    var obj = {};
-//    obj[req.body.email] = '{"name": "' + req.body.username + '", "hash":"' + req.body.hash + '"}';
-//    fs.writeFile('public/data.json', JSON.stringify(obj));
-//    res.redirect('/login');
-//  }
-//});
-//app.post('/login', function(req, res, next) {
-//  if (fs.existsSync('public/data.json')) {
-//    var file = fs.readFileSync('public/data.json');
-//    var data = JSON.parse(file);
-//    var username = searchUser(file, req.body.email, req.body.hash);
-//    if (username) {
-//      req.session.username = username;
-//      res.redirect('/');
-//    }
-//    else {
-//      res.redirect('/login');
-//    }
-//  }
-//  else {
-//    res.redirect('/register');
-//  }
-//});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

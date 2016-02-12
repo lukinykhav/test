@@ -7,20 +7,9 @@ var bodyParser = require('body-parser');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
-exports.addUser = function(req) {
-    if (fs.existsSync('public/data.json')) {
-        var file = fs.readFileSync('public/data.json');
-        var data = JSON.parse(file);  //parse the JSON
-        data[req.email] = '{"name": "' + req.username + '", "hash":"' + req.hash + '"}';
-        fs.writeFile('public/data.json', JSON.stringify(data), function (err) {
-            console.error(err)
-        });
-    }
-    else {
-        var obj = {};
-        obj[req.email] = '{"name": "' + req.username + '", "hash":"' + req.hash + '"}';
-        fs.writeFile('public/data.json', JSON.stringify(obj));
-    }
+exports.addUser = function(data, req) {
+    data[req.email] = '{"name": "' + req.username + '", "hash":"' + req.hash + '"}';
+    fs.writeFile('public/data.json', JSON.stringify(data));
     return true;
 };
 

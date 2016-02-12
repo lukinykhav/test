@@ -29,18 +29,27 @@ $(document).ready(function() {
                 url: '/signup',
                 data: {username: username, email: email, hash: hash},
                 success: function(res) {
-                    console.log(res);
+                    if(res) {
+                        $("#login-form").delay(100).fadeIn(100);
+                        $("#register-form").fadeOut(100);
+                        $('#register-form-link').removeClass('active');
+                        $(this).addClass('active');
+                    }
+                    else {
+                        console.log('this email exists');
+                    }
                 }
             });
         }
         else if($(this).is('#login-submit')) {
-            console.log(hash);
             $.ajax({
                 type: "POST",
                 url: '/signin',
                 data: {email: email, hash: hash},
                 success: function (username) {
-                    console.log(username);
+                    $('.container').load('views/main.html', function() {
+                        $('h1').append(username);
+                    });
                 }
             });
         }
