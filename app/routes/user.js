@@ -15,17 +15,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 exports.postUsers = function(req, res) {
-    var user = false;
+    var user,
+        search_user = false,
+        data = {};
     if (fs.existsSync('public/data.json')) {
         var file = fs.readFileSync('public/data.json');
-        var data = JSON.parse(file);  //parse the JSON
-        user = User.getUser(req.body);
+        data = JSON.parse(file);  //parse the JSON
+        user = new User.UserModel(req.body.username, req.body.email, req.body.hash, data);
+        search_user = user.getUser();
     }
-    else {
-        var data = {};
-    }
-    if(!user){
-        User.addUser(data, req.body);
+    if(!search_user){
+        user = new User.UserModel(req.body.username, req.body.email, req.body.hash, data);
+        user.addUser();
         res.send(true);
     }
     else {
@@ -34,7 +35,8 @@ exports.postUsers = function(req, res) {
 };
 
 exports.loginUser = function(req, res) {
-    var username = User.getUser(req.body);
+    var user = new User.UserModel(req.body.username, req.body.email, req.body.hash);
+    var username = user.getUser();
     if(username) {
         res.send(req.session.username = username);
     }

@@ -19,6 +19,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('.logout').on('click', function(){
+            localStorage.removeItem("email");
+            localStorage.removeItem("password");
+            localStorage.removeItem("name");
             $.ajax({
                 type: "GET",
                 url: '/logout',
@@ -26,8 +29,6 @@
                     $('.container').load('index.html');
                 }
             });
-            localStorage.removeItem("email");
-            localStorage.removeItem("password");
         });
     });
 </script>
